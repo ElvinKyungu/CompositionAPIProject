@@ -1,10 +1,11 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   const header = ref("Shopping list App");
+  const editingItem = ref(false);
   const items = ref([
-    {id:1, label: "poulet"},
-    {id:2, label: "ananas"},
-    {id:3, label: "Coca"},
+    // {id:1, label: "poulet"},
+    // {id:2, label: "ananas"},
+    // {id:3, label: "Coca"},
   ]);
   const newItem = ref("");
   const newItemHighPriority = ref(false)
@@ -12,12 +13,25 @@
     items.value.push({id: items.value.length +1, label: newItem.value})
     newItem.value = ""
   }
+  const doEdit = (e)=>{
+    editingItem.value = e
+    newItem.value = ""
+    
+  }
 </script>
 
 <template>
   <main>
-    <h1 class="text-center">{{ header }}</h1>
-    <form @submit.prevent="saveItem">
+    <div>
+      <h1 class="text-center">{{ header }}</h1>
+      <button v-if="editingItem" @click="doEdit(false)">
+        Cancel
+      </button>
+      <button v-else  @click="doEdit(true)">
+        Add item
+      </button>
+    </div>
+    <form @submit.prevent="saveItem" v-if="editingItem">
       <input 
         type="text" 
         placeholder="Add an items" 
@@ -41,5 +55,8 @@
         {{ label }}
       </li>
     </ul>
+    <div v-if="!items.length">
+      il n'y a rien jusqu'a maintenant ?
+    </div>
   </main>
 </template>
